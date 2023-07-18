@@ -5,7 +5,7 @@ require('dotenv').config()
 const app = express()
 const Person = require('./models/person')
 
-morgan.token('body', (req, res) => {
+morgan.token('body', (req) => {
     if (req.method === 'POST')
         return JSON.stringify(req.body)
     else return ''
@@ -51,9 +51,7 @@ app.put('/api/persons/:id', (request, response, next) => {
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
-    Person.findByIdAndRemove(request.params.id).then(result => {
-            response.status(204).end()
-        })
+    Person.findByIdAndRemove(request.params.id).then(() => { response.status(204).end() })
         .catch(error => next(error))
 })
 
@@ -100,6 +98,8 @@ const errorHandler = (error, request, response, next) => {
 
 app.use(errorHandler)
 
+
+// eslint-disable-next-line no-undef
 const PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
